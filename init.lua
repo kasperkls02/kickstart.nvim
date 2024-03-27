@@ -43,13 +43,20 @@ If you experience any errors while trying to install kickstart, run `:checkhealt
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
--- Set to true if you have a Nerd Font installed
-vim.g.have_nerd_font = false
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
+
+-- Set to true if you have a Nerd Font installed
+vim.g.have_nerd_font = true
+-- NvimTree setup - Disable netrw
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- NvimTree - set termguicolors to enable highlight group
+vim.opt.termguicolors = true
 
 -- Line number + releative number
 vim.opt.number = true
@@ -108,6 +115,9 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+
+-- My keymaps
+vim.keymap.set('n', '[ff', '<cmd>NvimTreeToggle<CR>')
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -201,32 +211,21 @@ require('lazy').setup({
   },
 
   {
+    'nvim-tree/nvim-tree.lua',
+    config = function()
+      require('nvim-tree').setup {}
+    end,
+  },
+
+  {
     'lervag/vimtex',
     init = function()
       -- Use init for configuration, don't use the more common "config".
       vim.tex_flavor = 'latex'
-      vim.g.vimtex_view_general_viewer = 'SumatraPDF'
-      vim.g.vimtex_view_general_options = '-reause-instance -forward-search @tex @line @pdf'
+      vim.g.vimtex_view_method = 'zathura'
+      --vim.g.vimtex_view_general_viewer = 'SumatraPDF'
+      --vim.g.vimtex_view_general_options = '-reause-instance -forward-search @tex @line @pdf'
       vim.g.vimtex_quickfix_mode = 0
-      vim.g.vimtex_fold_enabled = 1
-      vim.g.vimtex_fold_manual = 1
-      vim.g.vimtex_fold_types = {
-        cmd_addplot = {
-          cmds = { 'addplot[+3]?' },
-        },
-        cmd_multi = {
-          cmds = {
-            '%(re)?new%(command|environment)',
-            'providecommand',
-            'presetkeys',
-            'Declare%(Multi|Auto)?CiteCommand',
-            'Declare%(Index)?%(Field|List|name)%(Format|Alias)',
-          },
-        },
-        cmd_single = {
-          cmds = { 'hypersetup', 'tikzset', 'pgfplotstableread', 'lstset' },
-        },
-      }
     end,
   },
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
